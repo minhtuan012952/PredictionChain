@@ -1,120 +1,81 @@
-<a href="https://zeitgeist.pm">
-  <img src="./GH-banner.svg" width="800">
-</a>
+README.md (for PredictionChain)
+# PredictionChain  
+An evolving blockchain protocol for prediction markets and futarchy.
 
-# Zeitgeist: An Evolving Blockchain for Prediction Markets and Futarchy
+![Rust](https://img.shields.io/badge/language-Rust-000000?style=flat)  
+![Codecov](https://img.shields.io/codecov/c/github/your-org/predictionchain?style=flat)  
+![Discord](https://img.shields.io/badge/Discord-community-7289da?style=flat)  
+![Telegram](https://img.shields.io/badge/Telegram-chat-2ca5e0?style=flat)  
+![X](https://img.shields.io/badge/X-(@YourHandle)-1da1f2?style=flat)  
+![Pull Request Reviews](https://img.shields.io/badge/PR-reviews-enabled-green?style=flat)
 
-![Rust](https://github.com/zeitgeistpm/zeitgeist/actions/workflows/rust.yml/badge.svg)
-[![Codecov](https://codecov.io/gh/zeitgeistpm/zeitgeist/branch/main/graph/badge.svg)](https://codecov.io/gh/zeitgeistpm/zeitgeist)
-[![Discord](https://img.shields.io/badge/-Zeitgeist-blue?logo=discord&logoColor=ffffff&style=flat)](https://discord.gg/XhAcFWYUej)
-[![Telegram](https://img.shields.io/badge/-zeitgeist_official-blue?logo=telegram&style=flat)](https://t.me/zeitgeist_official)
-[![X](https://img.shields.io/badge/-zeitgeistpm-blue?logo=X&style=flat)](https://twitter.com/zeitgeistpm)
-![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/zeitgeistpm/zeitgeist?utm_source=oss&utm_medium=github&utm_campaign=zeitgeistpm%2Fzeitgeist&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+PredictionChain is a decentralized network for creating, trading, and resolving prediction markets — enabling users to build sophisticated financial contracts on virtually any outcome. Its native token (e.g., **PCN**) is used to influence network governance, and serves as a final-call dispute resolution mechanism in the on-chain court.
 
-Zeitgeist is a decentralized network for creating, betting on, and resolving
-prediction markets, allowing traders to create complex financial contracts on
-virtually _anything_. The platform's native currency ZTG is used to sway the
-direction of the network, and as a means of last-call dispute resolution in the
-decentralized court.
+---
 
-## Modules
+## Modules  
+- `authorized` — Provides authorized dispute resolution.  
+- `combinatorial-tokens` — Generates outcome tokens for combinatorial markets.  
+- `court` — Decentralised court for dispute resolution.  
+- `futarchy` — On-chain governance via prediction markets.  
+- `global-disputes` — If the court fails, the outcome with the highest locked tokens becomes canonical.  
+- `macros` — Shared macros used across modules.  
+- `market-commons` — Shared market logic.  
+- `neo-swaps` — Implements the Logarithmic Market Scoring Rule (LMSR) CFMM for combinatorial markets and futarchy.  
+- `orderbook` — Classic orderbook implementation.  
+- `parimutuel` — Simple parimutuel market maker for categorical markets.  
+- `prediction-markets` — Core logic for market creation, trading, and settlement.  
+- `swaps` — Implements a Balancer-style CFMM allowing liquidity pools, swaps and assets.  
+- `primitives` — Core types, traits, constants used globally.
 
-- [authorized](./zrml/authorized) - Offers authorized resolution of disputes.
-- [combinatorial-tokens](./zrml/combinatorial-tokens) - The module responsible
-  for generating Zeitgeist 2.0 outcome tokens.
-- [court](./zrml/court) - An implementation of a court mechanism used to resolve
-  disputes in a decentralized fashion.
-- [futarchy](./zrml/futarchy) - A novel on-chain governance mechanism using
-  prediction markets.
-- [global-disputes](./zrml-global-disputes) - Global disputes sets one out of
-  multiple outcomes with the most locked ZTG tokens as the canonical outcome.
-  This is the default process if a dispute mechanism fails to resolve.
-- [macros](./macros) - Contains macros shared by the other modules.
-- [market-commons](./zrml/market-commons) - Contains common operations on
-  markets that are used by multiple pallets.
-- [neo-swaps](./zrml/neo-swaps) - An implementation of the Logarithmic Market
-  Scoring Rule as constant function market maker, tailor-made for decentralized
-  combinatorial markets and futarchy.
-- [orderbook](./zrml/orderbook) - An order book implementation.
-- [parimutuel](./zrml/parimutuel) - A straightforward parimutuel market maker
-  for categorical markets.
-- [prediction-markets](./zrml/prediction-markets) - The core implementation of
-  the prediction market logic for creating and resolving markets.
-- [swaps](./zrml/swaps) - An implementation of the Balancer CFMM that allows any
-  user to create pools, provide liquidity or swap assets.
-- [primitives](./zrml/primitives) - Contains custom and common types, traits and
-  constants.
+---
 
-## How to Build and Run a Zeitgeist Node
+## Building & Running a Node  
+PredictionChain supports two deployment modes: a **standalone node** for development/testing, and a **parachain mode** (for integration into a larger ecosystem).
 
-Zeitgeist node comes in two flavors, one for standalone self-contained execution
-and another for Kusama/Polkadot parachain integration.
-
-To build the standalone version for testing, simply point to the top directory
-of this project and type:
-
+### Standalone (for testing)  
+From the project root:  
 ```bash
 cargo build --release
-```
 
-The standalone version uses the runtime defined for Zeitgeist's testnet _Battery
-Station_ in [runtimes/battery-station](runtimes/battery-station) and is run in
-`--dev` mode by default.
 
-To build the parachain version, execute the following command:
+This uses the runtime defined under runtimes/dev-station, and by default runs in --dev mode.
 
-```
+Parachain Mode
 cargo build --features parachain --release
-```
 
-By default, the parachain version will connect to the Zeitgeist main network,
-which launched as a parachain of Kusama and has since been migrated to Polkadot.
-The runtime of the main network is defined in
-[runtimes/zeitgeist](runtimes/zeitgeist).
 
-To connect to Zeitgeist's testnet Battery Station, which runs as a parachain of
-Rococo, run:
+By default this connects to the mainnet.
+To run against the testnet (e.g., “DevStation”), use:
 
-```
-cargo run --features parachain --release -- --chain=battery-station
-```
+cargo run --features parachain --release -- --chain=dev-station
 
-Optimized binaries (`--release`) are usually used for production (faster and
-smaller), but this behavior is optional and up to you.
+Docker
 
-### Using Docker
+We publish images on Docker Hub for both modes:
 
-We publish the latest standalone and parachain version to the [Docker
-Hub][zg-docker-hub], from where it can be pulled and ran locally to connect to
-the network with relatively low effort and high compatibility. In order to fetch
-the latest docker image, ensure you have Docker installed locally, then type (or
-paste) the following commands in your terminal.
+Parachain: docker pull yourorg/predictionchain-node-parachain
 
-For parachain Zeitgeist node:
+Standalone: docker pull yourorg/predictionchain-node
 
-```
-docker pull zeitgeistpm/zeitgeist-node-parachain
-```
+Run the standalone (for testing):
 
-For standalone, non-parachain Zeitgeist node:
+docker run yourorg/predictionchain-node -- <node-options-and-flags>
 
-```
-docker pull zeitgeistpm/zeitgeist-node
-```
+About
 
-To connect your Zeitgeist parachain node using Docker, follow the tutorial at
-our [documentation site][bs-docs].
+PredictionChain provides a foundation for decentralized prediction markets and futarchy governance. By combining financial markets with governance and dispute resolution, it enables stakeholders to trade on outcomes and influence protocol decisions — bridging collective intelligence and on-chain decision logic.
 
-Alternatively you can run a non-parachain node, which is usually only necessary
-for testing purposes, by executing the following command:
+Contributing
 
-```
-docker run zeitgeistpm/zeitgeist-node -- <node-options-and-flags>
-```
+See CONTRIBUTING.md for guidelines on contributing, submitting pull requests, and review process.
 
-[bs-docs]: https://docs.zeitgeist.pm/docs/basic/battery-station
-[ls-lmsr]: https://www.eecs.harvard.edu/cs286r/courses/fall12/papers/OPRS10.pdf
-[rikiddo]:
-  https://blog.zeitgeist.pm/introducing-zeitgeists-rikiddo-scoring-rule/
-[battery-station]: https://blog.zeitgeist.pm/zeitgeist-beta/
-[zg-docker-hub]: https://hub.docker.com/r/zeitgeistpm/zeitgeist-node
+License
+
+Licensed under the GNU GPL v3.0.
+
+
+---
+
+If you like, I can **generate several more name options** (and maybe help pick a nice logo/icon) so you can choose the best fit for your project. Would you like that?
+::contentReference[oaicite:1]{index=1}
