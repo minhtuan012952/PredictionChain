@@ -15,7 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Zeitgeist. If not, see <https://www.gnu.org/licenses/>.
 
-#![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(not(feature = "std"),  no_std)]
+
+
 
 /// Creates an `alloc::collections::BTreeMap` from the pattern `{ key => value, ... }`.
 ///
@@ -69,6 +71,7 @@ macro_rules! unreachable_non_terminating {
             log::warn!(target: $log_target, "{}", message);
         }
     };
+    
     ($condition: expr, $extra_code: expr, $message: literal, $($message_args: tt)*) => {
         let message = format!($message, $($message_args)*);
 
